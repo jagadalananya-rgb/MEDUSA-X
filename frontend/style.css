@@ -1,0 +1,132 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f1f6fc;
+    color: #1d3557;
+}
+
+/* Header */
+header {
+    background: linear-gradient(135deg, #123b70, #1769aa);
+    color: white;
+    text-align: center;
+    padding: 40px 20px;
+}
+
+header h1 {
+    font-size: 38px;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+}
+
+header p {
+    font-size: 17px;
+    margin-bottom: 10px;
+}
+
+header span {
+    font-size: 13px;
+    color: #d8eaff;
+}
+
+/* Main area */
+main {
+    max-width: 900px;
+    margin: 35px auto;
+    padding: 0 20px;
+}
+
+/* Cards */
+.card {
+    background: white;
+    padding: 28px;
+    margin-bottom: 25px;
+    border-radius: 12px;
+    box-shadow: 0 3px 14px rgba(30, 70, 110, 0.10);
+}
+
+.card h2 {
+    color: #123b70;
+    margin-bottom: 12px;
+}
+
+.card p {
+    margin-bottom: 15px;
+    line-height: 1.6;
+}
+
+/* File input */
+input[type="file"] {
+    display: block;
+    margin: 20px 0;
+    max-width: 100%;
+}
+
+/* Buttons */
+button {
+    background: #1769aa;
+    color: white;
+    border: none;
+    padding: 12px 22px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 15px;
+    margin: 8px 0;
+    transition: 0.2s;
+}
+
+button:hover {
+    background: #0d4778;
+}
+
+/* Results */
+pre,
+#timelineResult,
+#conflictResult,
+#medicationResult,
+#dashboardResult {
+    background: #edf4fb;
+    padding: 18px;
+    margin-top: 18px;
+    border-radius: 8px;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    line-height: 1.7;
+}
+
+/* Dashboard note */
+.note {
+    color: #65758b;
+    font-size: 13px;
+    margin-top: 15px;
+}
+
+/* Footer */
+footer {
+    background: #123b70;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px;
+}
+
+/* Mobile responsive */
+@media (max-width: 600px) {
+    header h1 {
+        font-size: 30px;
+    }
+
+    .card {
+        padding: 20px;
+    }
+
+    main {
+        margin: 20px auto;
+    }
+}

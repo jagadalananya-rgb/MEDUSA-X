@@ -1,0 +1,8 @@
+MEDUSA-X TEST DOCUMENT
+
+Patient admitted on 25 November 2026.
+Lab report received.
+Prescription record received.
+Discharge record pending.
+
+This is fictional test data.

@@ -1,0 +1,69 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEDUSA-X | Clinical Documentation Review</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>MEDUSA-X</h1>
+        <p>Clinical Documentation Review Prototype</p>
+        <span>Organize. Review. Identify.</span>
+    </header>
+
+    <main>
+
+        <section class="card">
+            <h2>Upload Medical Document</h2>
+            <p>Select a fictional PDF or TXT document for testing.</p>
+
+            <input type="file" id="fileInput" accept=".pdf,.txt">
+
+            <button id="uploadButton">Upload Document</button>
+
+            <pre id="result">Your document result will appear here.</pre>
+        </section>
+
+        <section class="card">
+            <h2>Patient Timeline</h2>
+            <button id="timelineButton">View Timeline</button>
+            <div id="timelineResult">Timeline will appear here.</div>
+        </section>
+
+        <section class="card">
+            <h2>Documentation Conflicts</h2>
+            <button id="conflictButton">Check Conflicts</button>
+            <div id="conflictResult">Conflict results will appear here.</div>
+        </section>
+
+        <section class="card">
+            <h2>Medication Review</h2>
+            <button id="medicationButton">Check Medication Records</button>
+            <div id="medicationResult">Medication results will appear here.</div>
+        </section>
+
+        <section class="card">
+            <h2>Safety Review Dashboard</h2>
+            <button id="dashboardButton">View Dashboard</button>
+            <div id="dashboardResult">Dashboard will appear here.</div>
+            <p class="note">
+                This status summarizes configured documentation checks.
+                It does not certify clinical safety.
+            </p>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>MEDUSA-X | Hackathon Prototype</p>
+    </footer>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
