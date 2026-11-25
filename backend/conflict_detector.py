@@ -4,11 +4,12 @@ def detect_conflicts(records):
 
     for record in records:
 
-        if record["status"] == "CONFLICT":
+        if record.get("status") == "CONFLICT":
+
             conflicts.append({
-                "issue": record["issue"],
-                "source": record["source"],
-                "priority": "HIGH"
+                "issue": record.get("issue", "Unknown issue"),
+                "source": record.get("source", "Unknown source"),
+                "priority": record.get("priority", "HIGH")
             })
 
     return conflicts

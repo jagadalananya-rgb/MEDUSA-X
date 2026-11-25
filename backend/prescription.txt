@@ -1,0 +1,6 @@
+DATE: 2026-11-24
+EVENT: Prescription record received
+DOCUMENT: Prescription
+
+MEDICINE: Demo Medicine A
+PRESCRIPTION_STATUS: DISCONTINUED

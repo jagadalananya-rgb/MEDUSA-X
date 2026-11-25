@@ -1,0 +1,6 @@
+DATE: 2026-11-25
+EVENT: Discharge summary received
+DOCUMENT: Discharge Summary
+
+MEDICINE: Demo Medicine A
+DISCHARGE_STATUS: CONTINUED

@@ -1,132 +1,444 @@
 
+/* MEDUSA-X GLOBAL STYLING */
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    scroll-behavior: smooth;
 }
 
 body {
     font-family: Arial, sans-serif;
-    background: #f1f6fc;
-    color: #1d3557;
+    background: #f8fbff;
+    color: #172554;
 }
 
-/* Header */
-header {
-    background: linear-gradient(135deg, #123b70, #1769aa);
-    color: white;
-    text-align: center;
-    padding: 40px 20px;
-}
+/* NAVIGATION */
 
-header h1 {
-    font-size: 38px;
-    letter-spacing: 2px;
-    margin-bottom: 10px;
-}
-
-header p {
-    font-size: 17px;
-    margin-bottom: 10px;
-}
-
-header span {
-    font-size: 13px;
-    color: #d8eaff;
-}
-
-/* Main area */
-main {
-    max-width: 900px;
-    margin: 35px auto;
-    padding: 0 20px;
-}
-
-/* Cards */
-.card {
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 8%;
     background: white;
-    padding: 28px;
-    margin-bottom: 25px;
-    border-radius: 12px;
-    box-shadow: 0 3px 14px rgba(30, 70, 110, 0.10);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    gap: 20px;
 }
 
-.card h2 {
+.navbar h2 {
+    color: #1d4ed8;
+    font-size: 25px;
+}
+
+.navbar nav a {
+    text-decoration: none;
+    color: #334155;
+    margin: 0 12px;
+    font-weight: bold;
+}
+
+.login-btn,
+.start-btn {
+    display: inline-block;
+    background: #2563eb;
+    color: white;
+    text-decoration: none;
+    border: none;
+    padding: 13px 24px;
+    border-radius: 7px;
+    cursor: pointer;
+}
+
+/* HERO SECTION */
+
+.hero {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 40px;
+    padding: 90px 8%;
+    background: linear-gradient(120deg, #eff6ff, #ffffff);
+}
+
+.hero-content {
+    max-width: 650px;
+}
+
+.tagline {
+    color: #2563eb;
+    font-weight: bold;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+}
+
+.hero h1 {
+    font-size: 48px;
     color: #123b70;
+    line-height: 1.2;
+    margin-bottom: 20px;
+}
+
+.description {
+    color: #64748b;
+    font-size: 17px;
+    line-height: 1.7;
+    margin-bottom: 25px;
+}
+
+.start-btn {
+    font-size: 16px;
+}
+
+.hero-card {
+    background: white;
+    padding: 40px;
+    border-radius: 18px;
+    text-align: center;
+    min-width: 260px;
+    box-shadow: 0 10px 35px rgba(37,99,235,0.12);
+}
+
+.medical-icon {
+    font-size: 55px;
+    color: #2563eb;
+    margin-bottom: 15px;
+}
+
+.hero-card h2 {
+    margin-bottom: 12px;
+    color: #1e40af;
+}
+
+.status {
+    margin-top: 20px;
+    color: #16a34a;
+}
+
+/* FEATURES */
+
+.features {
+    padding: 65px 8%;
+    text-align: center;
+}
+
+.features > h2 {
+    font-size: 30px;
+    color: #123b70;
+    margin-bottom: 35px;
+}
+
+.feature-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.feature-card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+    border: 1px solid #dbeafe;
+}
+
+.feature-card h3 {
+    color: #2563eb;
     margin-bottom: 12px;
 }
 
-.card p {
-    margin-bottom: 15px;
-    line-height: 1.6;
+.feature-card p {
+    color: #64748b;
+    line-height: 1.5;
 }
 
-/* File input */
-input[type="file"] {
+/* DASHBOARD */
+
+.dashboard-section {
+    padding: 60px 8%;
+    background: #f0f6ff;
+}
+
+.dashboard-section > h1 {
+    font-size: 32px;
+    margin-bottom: 10px;
+    color: #123b70;
+}
+
+.dashboard-section > p {
+    color: #64748b;
+    margin-bottom: 30px;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 25px;
+}
+
+.dashboard-card {
+    background: white;
+    padding: 25px;
+    border-radius: 14px;
+    border: 1px solid #dbeafe;
+    box-shadow: 0 5px 18px rgba(30,64,175,0.08);
+}
+
+.dashboard-card h2 {
+    color: #1d4ed8;
+    margin-bottom: 12px;
+    font-size: 21px;
+}
+
+.dashboard-card p {
+    color: #64748b;
+    margin-bottom: 15px;
+}
+
+.dashboard-card input[type="file"] {
     display: block;
-    margin: 20px 0;
+    margin: 12px 0;
     max-width: 100%;
 }
 
-/* Buttons */
-button {
-    background: #1769aa;
+.dashboard-card button {
+    background: #2563eb;
     color: white;
     border: none;
     padding: 12px 22px;
     border-radius: 7px;
     cursor: pointer;
-    font-size: 15px;
-    margin: 8px 0;
-    transition: 0.2s;
 }
 
-button:hover {
-    background: #0d4778;
+.dashboard-card button:hover,
+.start-btn:hover,
+.login-btn:hover {
+    background: #1e40af;
 }
 
-/* Results */
-pre,
-#timelineResult,
-#conflictResult,
-#medicationResult,
-#dashboardResult {
-    background: #edf4fb;
+.dashboard-card button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* RESULT SECTIONS */
+
+.result {
+    background: #eff6ff;
     padding: 18px;
-    margin-top: 18px;
     border-radius: 8px;
-    white-space: pre-wrap;
-    overflow-wrap: anywhere;
-    line-height: 1.7;
+    color: #334155;
+    margin-top: 12px;
 }
 
-/* Dashboard note */
-.note {
-    color: #65758b;
-    font-size: 13px;
+.result h3 {
+    color: #1e40af;
+    margin-bottom: 12px;
+}
+
+.result p {
+    margin: 8px 0;
+}
+
+/* TIMELINE */
+
+.timeline-list {
+    margin-top: 20px;
+    border-left: 3px solid #2563eb;
+    padding-left: 20px;
+}
+
+.timeline-item {
+    position: relative;
+    background: #f8fbff;
+    padding: 18px;
+    margin-bottom: 18px;
+    border-radius: 10px;
+    border: 1px solid #dbeafe;
+}
+
+.timeline-item h3 {
+    color: #1e40af;
+    margin: 8px 0;
+}
+
+.timeline-item p {
+    color: #475569;
+}
+
+.timeline-date {
+    color: #2563eb;
+    font-weight: bold;
+}
+
+.timeline-item small {
+    color: #64748b;
+}
+
+/* CONFLICT DETECTION */
+
+.conflict-item {
+    background: #fff7ed;
+    border: 1px solid #fed7aa;
+    border-radius: 10px;
+    padding: 18px;
     margin-top: 15px;
 }
 
-/* Footer */
+.conflict-status {
+    display: inline-block;
+    background: #ffedd5;
+    color: #c2410c;
+    padding: 6px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.conflict-item h3 {
+    color: #1e40af;
+    margin: 12px 0;
+}
+
+.conflict-item p {
+    margin: 8px 0;
+}
+
+.conflict-item small {
+    color: #64748b;
+}
+
+.review-label {
+    color: #c2410c !important;
+    font-weight: bold;
+    margin-top: 12px;
+}
+
+/* MEDICATION REVIEW */
+
+.medication-item {
+    background: #f8fbff;
+    border: 1px solid #dbeafe;
+    border-radius: 12px;
+    padding: 18px;
+    margin-top: 18px;
+}
+
+.medication-status {
+    display: inline-block;
+    background: #dbeafe;
+    color: #1d4ed8;
+    padding: 7px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.medication-item h3 {
+    color: #1e40af;
+    margin: 15px 0;
+}
+
+.medication-record {
+    background: white;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 8px;
+}
+
+.medication-warning {
+    color: #c2410c;
+    font-weight: bold;
+    margin: 12px 0;
+}
+
+/* DASHBOARD STATUS */
+
+.dashboard-status {
+    display: inline-block;
+    padding: 9px 16px;
+    border-radius: 7px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.status-red {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.status-yellow {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.status-green {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.status-pending {
+    background: #e2e8f0;
+    color: #334155;
+}
+
+/* FOOTER */
+
 footer {
     background: #123b70;
     color: white;
     text-align: center;
-    padding: 20px;
-    margin-top: 40px;
+    padding: 22px;
 }
 
-/* Mobile responsive */
-@media (max-width: 600px) {
-    header h1 {
-        font-size: 30px;
+/* RESPONSIVE DESIGN */
+
+@media (max-width: 800px) {
+
+    .hero {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 55px 6%;
     }
 
-    .card {
-        padding: 20px;
+    .hero h1 {
+        font-size: 36px;
     }
 
-    main {
-        margin: 20px auto;
+    .feature-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .navbar {
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+}
+
+@media (max-width: 500px) {
+
+    .feature-container {
+        grid-template-columns: 1fr;
+    }
+
+    .navbar {
+        flex-direction: column;
+    }
+
+    .navbar nav a {
+        margin: 0 5px;
+    }
+
+    .dashboard-section {
+        padding: 40px 5%;
+    }
+
+    .hero h1 {
+        font-size: 32px;
+    }
+
+    .hero-card {
+        min-width: 0;
+        width: 100%;
     }
 }

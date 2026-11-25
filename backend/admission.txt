@@ -1,0 +1,6 @@
+DATE: 2026-11-23
+EVENT: Patient admitted
+DOCUMENT: Admission Report
+
+CONFLICT: Condition information differs between admission and discharge records
+SOURCE: Admission Report and Discharge Summary

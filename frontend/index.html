@@ -4,66 +4,191 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MEDUSA-X | Clinical Documentation Review</title>
+    <title>MEDUSA-X | Clinical Intelligence</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <header>
-        <h1>MEDUSA-X</h1>
-        <p>Clinical Documentation Review Prototype</p>
-        <span>Organize. Review. Identify.</span>
-    </header>
+<header class="navbar" id="home">
+    <h2>✚ MEDUSA-X</h2>
 
-    <main>
+    <nav>
+        <a href="#home">Home</a>
+        <a href="#features">Features</a>
+        <a href="#dashboard">Dashboard</a>
+        <a href="#contact">Contact</a>
+    </nav>
 
-        <section class="card">
-            <h2>Upload Medical Document</h2>
-            <p>Select a fictional PDF or TXT document for testing.</p>
+    <a href="#dashboard" class="login-btn">Get Started</a>
+</header>
 
-            <input type="file" id="fileInput" accept=".pdf,.txt">
+<section class="hero">
+    <div class="hero-content">
+        <p class="tagline">AGENTIC CLINICAL INTELLIGENCE</p>
 
-            <button id="uploadButton">Upload Document</button>
+        <h1>
+            Medical Records.<br>
+            Evidence Matters.
+        </h1>
 
-            <pre id="result">Your document result will appear here.</pre>
-        </section>
+        <p class="description">
+            Reconstruct patient timelines, identify
+            documentation conflicts, compare medication
+            records and flag unresolved information
+            for professional review.
+        </p>
 
-        <section class="card">
-            <h2>Patient Timeline</h2>
-            <button id="timelineButton">View Timeline</button>
-            <div id="timelineResult">Timeline will appear here.</div>
-        </section>
+        <a href="#dashboard" class="start-btn">
+            Get Started →
+        </a>
+    </div>
 
-        <section class="card">
-            <h2>Documentation Conflicts</h2>
-            <button id="conflictButton">Check Conflicts</button>
-            <div id="conflictResult">Conflict results will appear here.</div>
-        </section>
+    <div class="hero-card">
+        <div class="medical-icon">✚</div>
+        <h2>Smart Clinical Analysis</h2>
+        <p>Every conclusion needs evidence.</p>
+        <div class="status">● System Ready</div>
+    </div>
+</section>
 
-        <section class="card">
-            <h2>Medication Review</h2>
-            <button id="medicationButton">Check Medication Records</button>
-            <div id="medicationResult">Medication results will appear here.</div>
-        </section>
+<section class="features" id="features">
+    <h2>Our Intelligence Features</h2>
 
-        <section class="card">
-            <h2>Safety Review Dashboard</h2>
-            <button id="dashboardButton">View Dashboard</button>
-            <div id="dashboardResult">Dashboard will appear here.</div>
-            <p class="note">
-                This status summarizes configured documentation checks.
-                It does not certify clinical safety.
+    <div class="feature-container">
+
+        <div class="feature-card">
+            <h3>📄 Medical Records</h3>
+            <p>Upload multiple PDF and TXT documents.</p>
+        </div>
+
+        <div class="feature-card">
+            <h3>📅 Patient Timeline</h3>
+            <p>Reconstruct patient events chronologically.</p>
+        </div>
+
+        <div class="feature-card">
+            <h3>⚠️ Conflict Detection</h3>
+            <p>Identify inconsistent documentation.</p>
+        </div>
+
+        <div class="feature-card">
+            <h3>💊 Medication Review</h3>
+            <p>Compare medication documentation.</p>
+        </div>
+
+    </div>
+</section>
+
+<section class="dashboard-section" id="dashboard">
+
+    <h1>Clinical Intelligence Dashboard</h1>
+
+    <p>
+        Evidence-based medical documentation review
+    </p>
+
+    <div class="dashboard-grid">
+
+        <!-- DOCUMENT UPLOAD -->
+        <div class="dashboard-card" id="documents">
+
+            <h2>📄 Document Upload</h2>
+
+            <p>
+                Select multiple fictional medical records
+                in PDF or TXT format.
             </p>
-        </section>
 
-    </main>
+            <input
+                type="file"
+                id="medicalFiles"
+                accept=".pdf,.txt"
+                multiple
+            >
 
-    <footer>
-        <p>MEDUSA-X | Hackathon Prototype</p>
-    </footer>
+            <p id="fileStatus">No files selected</p>
 
-    <script src="script.js"></script>
+            <button id="uploadBtn">
+                Upload Documents
+            </button>
+
+        </div>
+
+        <!-- PATIENT TIMELINE -->
+        <div class="dashboard-card" id="timeline">
+
+            <h2>📅 Patient Timeline</h2>
+
+            <p>Chronological record of documented events.</p>
+
+            <div id="timelineResults" class="timeline-list">
+                <p>Upload documents to view the timeline.</p>
+            </div>
+
+        </div>
+
+        <!-- CONFLICT DETECTION -->
+        <div class="dashboard-card" id="conflicts">
+
+            <h2>⚠️ Documentation Conflict Detection</h2>
+
+            <p>
+                Identify discrepancies between uploaded records.
+            </p>
+
+            <div id="conflictResults" class="result">
+                <p>Upload documents to review conflicts.</p>
+            </div>
+
+        </div>
+
+        <!-- MEDICATION REVIEW -->
+        <div class="dashboard-card" id="medications">
+
+            <h2>💊 Medication Review</h2>
+
+            <p>
+                Compare medication information across records.
+            </p>
+
+            <div id="medicationResults" class="result">
+                <p>Upload documents to review medication records.</p>
+            </div>
+
+        </div>
+
+        <!-- SAFETY REVIEW DASHBOARD -->
+        <div class="dashboard-card" id="safety">
+
+            <h2>🛡 Safety Review Dashboard</h2>
+
+            <p>
+                Summary of unresolved documentation findings.
+            </p>
+
+            <div id="dashboardResults" class="result">
+                <h3>Status: PENDING</h3>
+                <p>Upload documents to begin the review.</p>
+            </div>
+
+            <p class="review-label">
+                Software findings require professional review.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+<footer id="contact">
+    <p>
+        © 2026 MEDUSA-X | Clinical Documentation Review Prototype
+    </p>
+</footer>
+
+<script src="script.js"></script>
 
 </body>
 </html>

@@ -7,14 +7,15 @@ from timeline import build_timeline
 from conflict_detector import detect_conflicts
 from medication_checker import check_medications
 from safety_dashboard import get_dashboard_summary
+from llm_analyzer import analyze_document
+
 
 app = FastAPI(
     title="MEDUSA-X API",
     description="Clinical Documentation Review Prototype",
-    version="1.0"
+    version="1.3"
 )
 
-# Frontend connection
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -23,91 +24,271 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
+# Stores the latest uploaded documents
+current_document_text = None
+current_filenames = []
 
-# Homepage API
+
+# Remove exact duplicate records
+def remove_duplicates(records, keys):
+
+    unique_records = []
+    seen = set()
+
+    for record in records:
+
+        record_key = tuple(
+            str(record.get(key, "")).strip().lower()
+            for key in keys
+        )
+
+        if record_key not in seen:
+            seen.add(record_key)
+            unique_records.append(record)
+
+    return unique_records
+
+
+# Read labelled information from uploaded documents
+def parse_document(text):
+
+    lines = text.splitlines()
+
+    timeline_records = []
+    medication_records = []
+    conflict_records = []
+
+    timeline_record = {}
+    medication_record = {}
+    conflict_record = {}
+
+    for line in lines:
+
+        if ":" not in line:
+            continue
+
+        key, value = line.split(":", 1)
+
+        key = key.strip().upper()
+        value = value.strip()
+
+        if not value:
+            continue
+
+        # Timeline information
+        if key == "DATE":
+
+            if timeline_record:
+                timeline_records.append(timeline_record)
+
+            timeline_record = {"date": value}
+
+        elif key == "EVENT":
+            timeline_record["event"] = value
+
+        elif key == "DOCUMENT":
+            timeline_record["document"] = value
+
+        # Medication information
+        elif key == "MEDICINE":
+
+            if medication_record:
+                medication_records.append(medication_record)
+
+            medication_record = {"medicine": value}
+
+        elif key == "PRESCRIPTION_STATUS":
+            medication_record["prescription_status"] = value.upper()
+
+        elif key == "DISCHARGE_STATUS":
+            medication_record["discharge_status"] = value.upper()
+
+        # Documentation conflict information
+        elif key == "CONFLICT":
+
+            if conflict_record:
+                conflict_records.append(conflict_record)
+
+            conflict_record = {
+                "status": "CONFLICT",
+                "issue": value
+            }
+
+        elif key == "SOURCE" and conflict_record:
+            conflict_record["source"] = value
+
+    # Save final records
+    if timeline_record:
+        timeline_records.append(timeline_record)
+
+    if medication_record:
+        medication_records.append(medication_record)
+
+    if conflict_record:
+        conflict_records.append(conflict_record)
+
+    # Keep complete timeline records
+    timeline_records = [
+        record for record in timeline_records
+        if all(key in record for key in (
+            "date", "event", "document"
+        ))
+    ]
+
+    # Remove exact duplicate timeline entries
+    timeline_records = remove_duplicates(
+        timeline_records,
+        ["date", "event", "document"]
+    )
+
+    # Combine medication information for the same medicine
+    merged_medications = {}
+
+    for record in medication_records:
+
+        medicine = record["medicine"].strip().lower()
+
+        if medicine not in merged_medications:
+            merged_medications[medicine] = {
+                "medicine": record["medicine"]
+            }
+
+        merged_medications[medicine].update({
+            key: value
+            for key, value in record.items()
+            if key != "medicine"
+        })
+
+    medication_records = [
+        record for record in merged_medications.values()
+        if all(key in record for key in (
+            "medicine",
+            "prescription_status",
+            "discharge_status"
+        ))
+    ]
+
+    # Keep complete conflict records
+    conflict_records = [
+        record for record in conflict_records
+        if "source" in record and "issue" in record
+    ]
+
+    # Remove exact duplicate conflict entries
+    conflict_records = remove_duplicates(
+        conflict_records,
+        ["issue", "source"]
+    )
+
+    return timeline_records, conflict_records, medication_records
+
+
+def get_uploaded_records():
+
+    if current_document_text is None:
+        raise HTTPException(
+            status_code=400,
+            detail="Please upload documents first."
+        )
+
+    return parse_document(current_document_text)
+
+
 @app.get("/")
 def home():
+
     return {
         "project": "MEDUSA-X",
         "message": "Backend API is running!"
     }
 
 
-# Health Check API
 @app.get("/health")
 def health_check():
+
     return {
         "status": "running",
         "project": "MEDUSA-X"
     }
 
 
-# Document Upload API
+# Upload multiple PDF and TXT documents
 @app.post("/upload")
-async def upload_document(file: UploadFile = File(...)):
+async def upload_documents(files: list[UploadFile] = File(...)):
 
-    if not file.filename or not file.filename.lower().endswith((".pdf", ".txt")):
+    global current_document_text, current_filenames
+
+    if not files:
         raise HTTPException(
             status_code=400,
-            detail="Only PDF and TXT files are supported."
+            detail="Please select at least one document."
         )
 
-    content = await file.read()
+    extracted_documents = []
+    uploaded_filenames = []
 
-    class UploadedFile:
-        def __init__(self, name, data):
-            self.name = name
-            self.data = data
+    for file in files:
 
-        def getvalue(self):
-            return self.data
+        if not file.filename or not file.filename.lower().endswith(
+            (".pdf", ".txt")
+        ):
+            raise HTTPException(
+                status_code=400,
+                detail="Only PDF and TXT files are supported."
+            )
 
-    uploaded_file = UploadedFile(file.filename, content)
+        content = await file.read()
 
-    extracted_text = extract_text(uploaded_file)
+        class UploadedFile:
 
-    if extracted_text.startswith("Document reading error:"):
-        raise HTTPException(
-            status_code=400,
-            detail=extracted_text
+            def __init__(self, name, data):
+                self.name = name
+                self.data = data
+
+            def getvalue(self):
+                return self.data
+
+        uploaded_file = UploadedFile(file.filename, content)
+
+        extracted_text = extract_text(uploaded_file)
+
+        if extracted_text.startswith("Document reading error:"):
+            raise HTTPException(
+                status_code=400,
+                detail=f"{file.filename}: {extracted_text}"
+            )
+
+        if not extracted_text.strip():
+            raise HTTPException(
+                status_code=400,
+                detail=f"No readable text found in {file.filename}."
+            )
+
+        extracted_documents.append(
+            f"\nDOCUMENT_FILE: {file.filename}\n{extracted_text}"
         )
 
-    if not extracted_text.strip():
-        raise HTTPException(
-            status_code=400,
-            detail="No readable text found in this document."
-        )
+        uploaded_filenames.append(file.filename)
+
+    # Store uploaded documents
+    current_document_text = "\n".join(extracted_documents)
+    current_filenames = uploaded_filenames
 
     return {
-        "filename": file.filename,
-        "extracted_text": extracted_text,
-        "message": "Document text extracted successfully."
+        "filenames": current_filenames,
+        "total_documents": len(current_filenames),
+        "extracted_text": current_document_text,
+        "message": "Multiple documents uploaded successfully."
     }
 
 
-# Patient Timeline API
+# Patient Timeline
 @app.post("/timeline")
 def patient_timeline():
 
-    records = [
-        {
-            "date": "2026-11-23",
-            "event": "Lab report received",
-            "document": "Lab Report"
-        },
-        {
-            "date": "2026-11-25",
-            "event": "Patient admitted",
-            "document": "Admission Record"
-        },
-        {
-            "date": "2026-11-24",
-            "event": "Prescription record received",
-            "document": "Prescription"
-        }
-    ]
+    timeline_records, _, _ = get_uploaded_records()
 
-    timeline = build_timeline(records)
+    timeline = build_timeline(timeline_records)
 
     return {
         "patient_timeline": [
@@ -118,76 +299,82 @@ def patient_timeline():
             }
             for item in timeline
         ],
-        "message": "Patient timeline generated successfully."
+        "message": "Timeline generated successfully."
     }
 
 
-# Conflict Detection API
+# Documentation Conflict Detection
 @app.post("/conflicts")
 def conflict_detection():
 
-    records = [
-        {
-            "status": "CONFLICT",
-            "issue": "Date mismatch between records",
-            "source": "Admission Record and Lab Report"
-        },
-        {
-            "status": "CLEAR",
-            "issue": "No conflict found",
-            "source": "Prescription Record"
-        }
-    ]
+    _, conflict_records, _ = get_uploaded_records()
 
-    conflicts = detect_conflicts(records)
+    conflicts = detect_conflicts(conflict_records)
 
     return {
         "total_conflicts": len(conflicts),
         "conflicts": conflicts,
-        "message": "Documentation review findings generated."
+        "message": "Conflict review generated successfully."
     }
 
 
-# Medication Checker API
+# Medication Review
 @app.post("/medications")
 def medication_check():
 
-    records = [
-        {
-            "medicine": "Medicine A",
-            "prescription_status": "DISCONTINUED",
-            "discharge_status": "CONTINUED"
-        },
-        {
-            "medicine": "Medicine B",
-            "prescription_status": "CONTINUED",
-            "discharge_status": "CONTINUED"
-        }
-    ]
+    _, _, medication_records = get_uploaded_records()
 
-    issues = check_medications(records)
+    issues = check_medications(medication_records)
+
+    # Remove exact duplicate medication findings
+    issues = remove_duplicates(
+        issues,
+        ["medicine", "issue", "priority", "message"]
+    )
 
     return {
         "total_issues": len(issues),
         "medication_issues": issues,
-        "message": "Medication documentation review completed."
+        "message": "Medication review generated successfully."
     }
 
 
-# Safety Dashboard API
+# Safety Review Dashboard
 @app.get("/dashboard")
 def safety_dashboard():
 
-    findings = [
-        {
-            "issue": "Date mismatch between records",
-            "priority": "HIGH"
-        },
-        {
-            "issue": "Medication status mismatch",
-            "priority": "HIGH"
-        }
-    ]
+    _, conflict_records, medication_records = get_uploaded_records()
+
+    conflicts = detect_conflicts(conflict_records)
+
+    medication_issues = check_medications(medication_records)
+
+    medication_issues = remove_duplicates(
+        medication_issues,
+        ["medicine", "issue", "priority", "message"]
+    )
+
+    findings = []
+
+    for conflict in conflicts:
+
+        findings.append({
+            "issue": conflict["issue"],
+            "priority": conflict["priority"]
+        })
+
+    for issue in medication_issues:
+
+        findings.append({
+            "issue": issue["issue"],
+            "priority": issue["priority"]
+        })
+
+    # Remove exact duplicate dashboard findings
+    findings = remove_duplicates(
+        findings,
+        ["issue", "priority"]
+    )
 
     summary = get_dashboard_summary(
         findings,
@@ -196,5 +383,23 @@ def safety_dashboard():
 
     return {
         "dashboard": summary,
-        "message": "Dashboard summary generated successfully."
+        "message": "Dashboard generated successfully."
+    }
+
+
+# Optional LLM Documentation Review
+@app.post("/llm-review")
+def llm_review():
+
+    if current_document_text is None:
+        raise HTTPException(
+            status_code=400,
+            detail="Please upload documents first."
+        )
+
+    result = analyze_document(current_document_text)
+
+    return {
+        "llm_review": result,
+        "message": "Optional documentation review completed."
     }
